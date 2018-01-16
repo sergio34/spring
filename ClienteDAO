@@ -1,0 +1,149 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author sergio
+ */
+public class PersonaDAO {
+    
+   String sql="select * from persona " ;
+   Conexion con = new Conexion(); //Conexion programa-base de datos
+    Connection cn = con.conectar();
+    public ArrayList<Personi> getListaPersonas(){
+        ArrayList<Personi> lista = new ArrayList<Personi>();
+        
+         try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                Personi personi =new Personi();
+                personi.setId(rs.getInt("idPersona"));
+                personi.setName( rs.getString("nombrePersona"));
+                personi.setEdad(rs.getInt("edadPersona"));
+                personi.setContra(rs.getString("contraPersona"));
+                lista.add(personi);
+              // JOptionPane.showMessageDialog(null, personi.getName());
+            }
+           /*  for (Personi p : lista) {
+            JOptionPane.showMessageDialog(null, p.getName());
+        }*/
+    return lista;
+    }catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, e);
+            return null;
+        }
+    
+}
+    public void insertarPersona(Personi p){
+        
+    //////////////////////////////////////////////
+    
+    
+
+   
+        sql = "insert into persona (nombrePersona,contraPersona,edadPersona) values (?,?,?)";
+        
+        try {
+
+            PreparedStatement pst = cn.prepareStatement(sql);
+            
+
+            pst.setString(1, p.getName());
+            pst.setString(2, p.getContra());
+            pst.setInt(3, p.getEdad());
+            
+
+           ;
+
+            int n = pst.executeUpdate();     
+
+
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, e);
+           
+        }
+    
+
+    
+    }
+    public void eliminarPersona(int id){
+        
+        sql = "delete from persona where idpersona=?";
+        try {
+
+            PreparedStatement pst = cn.prepareStatement(sql);
+            
+
+           
+            pst.setInt(1, id);
+
+           
+
+            int n = pst.executeUpdate();     
+
+
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, e);
+           
+        }
+        
+
+    
+    }
+    
+    public Personi modificarPersona(int id){
+       try {
+           Personi p=new Personi();
+           sql="select * from persona  where idPersona="+id ;
+           //JOptionPane.showMessageDialog(null, sql);
+           Statement st = cn.createStatement();
+           ResultSet rs = st.executeQuery(sql);
+           rs.next();
+           p.setName(rs.getString("nombrePersona"));
+           p.setContra(rs.getString("contraPersona"));
+           p.setEdad(rs.getInt("edadPersona"));
+           //JOptionPane.showMessageDialog(null, p.getName());
+           return p;
+       } catch (SQLException ex) {
+           JOptionPane.showMessageDialog(null, ex);
+           return null;
+       }
+    
+    }
+    
+    public void modificarPersona(Personi p){
+    
+        sql = "update persona set nombrePersona=?,contraPersona=?,edadPersona=? where idPersona=?";
+try {
+
+            PreparedStatement pst = cn.prepareStatement(sql);
+            
+
+            pst.setString(1, p.getName());
+            pst.setString(2, p.getContra());
+            pst.setInt(3, p.getEdad());
+            pst.setInt(4, p.getId());
+
+           ;
+
+            int n = pst.executeUpdate();     
+
+
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, e);
+           
+        }
+    
+    }
+}
