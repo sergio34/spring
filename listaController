@@ -1,0 +1,39 @@
+@Controller
+public class ListarPersonaController {
+      ArrayList<Personi> listapersonas = new ArrayList<Personi>();
+    PersonaDAO pdao = new PersonaDAO();
+    @RequestMapping("index.htm")
+    public ModelAndView indexPersona(){
+         
+        ModelAndView mav=new ModelAndView();
+        
+        mav.setViewName("index");
+         
+        return  mav;
+    }
+    @RequestMapping("listapersona1.htm")
+    public ModelAndView listarPersona(){
+         listapersonas.clear();
+        listapersonas=pdao.getListaPersonas();
+        ModelAndView mav=new ModelAndView();
+        
+        mav.setViewName("listarpersona1");
+         mav.addObject("lista", listapersonas); 
+        return  mav;
+    }
+    
+    @RequestMapping("listapersona.htm")
+    public String listaPersona(Model model){
+        listapersonas.clear();
+        listapersonas=pdao.getListaPersonas();
+        model.addAttribute("lista",listapersonas);
+        
+       
+        return  "listarpersona1";
+    }
+    
+      
+       
+         
+    
+}
